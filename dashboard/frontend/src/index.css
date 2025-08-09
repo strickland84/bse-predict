@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-dark-text text-sm;
+    font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.01em;
+    background: linear-gradient(180deg, #040811 0%, #0a1628 100%);
+    min-height: 100vh;
+  }
+  
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(0, 153, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 20%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  #root {
+    position: relative;
+    z-index: 1;
+  }
+  
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    font-size: 0.85em;
+    @apply text-accent;
+  }
+  
+  h1 { @apply text-2xl font-bold bg-gradient-to-r from-accent to-blue-glow bg-clip-text text-transparent; }
+  h2 { @apply text-lg font-semibold text-dark-text; }
+  h3 { @apply text-base font-medium text-dark-text; }
+  
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-card;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-dark-border;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 153, 255, 0.3);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-blue-glow;
+    box-shadow: 0 0 10px rgba(0, 153, 255, 0.5);
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-dark-card/80 backdrop-blur-sm border border-dark-border rounded-lg p-4;
+    background: linear-gradient(135deg, rgba(10, 22, 40, 0.9) 0%, rgba(30, 58, 95, 0.2) 100%);
+    box-shadow: 0 0 20px rgba(0, 153, 255, 0.1), inset 0 0 20px rgba(0, 153, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.5), transparent);
+    animation: border-beam 3s linear infinite;
+  }
+  
+  .card-glow {
+    @apply card;
+    box-shadow: 0 0 30px rgba(0, 153, 255, 0.3), inset 0 0 30px rgba(0, 153, 255, 0.1);
+  }
+  
+  .status-dot {
+    @apply w-2 h-2 rounded-full inline-block;
+    box-shadow: 0 0 10px currentColor;
+  }
+  
+  .prediction-badge {
+    @apply px-2 py-1 rounded text-xs font-semibold;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+  }
+  
+  .btn-primary {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-300;
+    @apply bg-gradient-to-r from-blue-glow to-accent text-dark-bg;
+    @apply hover:shadow-neon hover:scale-105 active:scale-95;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-300;
+    @apply bg-dark-card border border-dark-border text-dark-text;
+    @apply hover:border-accent hover:shadow-glow hover:bg-dark-border/50;
+  }
+  
+  .nav-link {
+    @apply transition-all duration-300 relative;
+  }
+  
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #00ffff, #0099ff);
+    transition: width 0.3s ease;
+  }
+  
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+  
+  .metric-card {
+    @apply p-3 rounded-lg bg-gradient-to-br from-dark-card to-dark-bg border border-dark-border;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .metric-card::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+    animation: pulse-slow 4s infinite;
+  }
+  
+  .glow-text {
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+  }
+  
+  .cyber-grid {
+    background-image: 
+      linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+}

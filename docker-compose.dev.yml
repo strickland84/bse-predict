@@ -1,0 +1,108 @@
+services:
+  postgres-dev:
+    image: timescale/timescaledb:latest-pg15
+    container_name: bse-predict-postgres-dev
+    environment:
+      - POSTGRES_DB=crypto_ml
+      - POSTGRES_USER=crypto_user
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-dev_password}
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - bse-network-dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crypto_user -d crypto_ml"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  bse-predictor-dev:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: bse-predictor:dev
+    container_name: bse-predict-app-dev
+    restart: unless-stopped
+    depends_on:
+      postgres-dev:
+        condition: service_healthy
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - DATABASE_URL=postgresql://crypto_user:${POSTGRES_PASSWORD:-dev_password}@postgres-dev:5432/crypto_ml
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - ENVIRONMENT=development
+    volumes:
+      - ./logs:/app/logs
+      - ./models:/app/models
+      - ./config.yaml:/app/config.yaml:ro
+      - ./src:/app/src:ro
+    ports:
+      - "8000:8000"  # Health check endpoint
+    networks:
+      - bse-network-dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 120s
+
+  # Dashboard Backend API
+  dashboard-backend:
+    build: ./dashboard/backend
+    container_name: bse-predict-dashboard-backend
+    environment:
+      - DATABASE_URL=postgresql://crypto_user:${POSTGRES_PASSWORD:-dev_password}@postgres-dev:5432/crypto_ml
+    ports:
+      - "8001:8000"
+    depends_on:
+      postgres-dev:
+        condition: service_healthy
+    networks:
+      - bse-network-dev
+    restart: unless-stopped
+
+  # Dashboard with nginx (frontend + reverse proxy)
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile.nginx
+      args:
+        ENV: dev
+    container_name: bse-predict-dashboard
+    ports:
+      - "3000:80"
+    depends_on:
+      - dashboard-backend
+    networks:
+      - bse-network-dev
+    restart: unless-stopped
+
+  # Optional: pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: bse-predict-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@bse-predict.com
+      - PGADMIN_DEFAULT_PASSWORD=admin_password
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres-dev
+    networks:
+      - bse-network-dev
+    restart: unless-stopped
+
+volumes:
+  postgres_dev_data:
+    driver: local
+
+networks:
+  bse-network-dev:
+    driver: bridge

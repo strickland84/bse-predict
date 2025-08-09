@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.test
+.env.production
+
+# Configuration
+config.yaml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+/logs/
+*.log
+
+# Data
+/opencodetmp/
+/models/
+/models_optimized/
+*.db
+*.sqlite
+
+# Docker
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backups
+backups/
+*.bak
+*.backup
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Dashboard frontend
+dashboard/frontend/node_modules/
+dashboard/frontend/dist/
+dashboard/frontend/.vite/
+dashboard/frontend/*.log
+dashboard/frontend/.env
+dashboard/frontend/.env.local
+dashboard/frontend/.env.production
+
+# Dashboard backend
+dashboard/backend/__pycache__/
+dashboard/backend/*.pyc
+dashboard/backend/.env
+dashboard/backend/.pytest_cache/

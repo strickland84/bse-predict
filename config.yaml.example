@@ -1,0 +1,69 @@
+app:
+  name: "BSE Predict - Bitcoin Sol Eth Multi-Target Predictor"
+  version: "1.0.0"
+  log_level: "INFO"
+  environment: "development"
+
+trading:
+  assets:
+    - "BTC/USDT"
+    - "ETH/USDT"
+    - "SOL/USDT"
+  target_percentages: [0.01, 0.02, 0.05]  # 1%, 2%, 5%
+  timeframe: "1h"
+  lookback_days: 180
+  exchange: "binance"
+
+database:
+  url: "postgresql://crypto_user:password@localhost:5432/crypto_ml"
+  pool_size: 10
+  max_overflow: 20
+  pool_pre_ping: true
+  
+ml:
+  retrain_frequency: "daily"
+  min_samples_for_training: 500
+  max_lookback_hours: 168  # 1 week
+  training_data_limit: 4000  # Max candles to use for training (~5.5 months)
+  test_size: 0.2
+  random_state: 42
+  use_optimized_in_predictions: true
+  tuning:
+    enabled: true
+    engine: "optuna"  # "optuna" | "random" | "grid"
+    n_trials: 20  # Reduced for testing
+    cv_folds: 5
+    embargo_hours: 72
+    scoring: "f1_weighted"
+    parallel_trials: 1
+    per_model_time_limit_min: 30
+    deploy_if_better: true
+    min_improvement_pct: 0.0
+    max_concurrent_symbols: 1
+    models: ["rf"]  # Only tune RandomForest
+  
+telegram:
+  bot_token: "YOUR_BOT_TOKEN_HERE"  # Get from @BotFather on Telegram
+  chat_id: "YOUR_CHAT_ID_HERE"      # Get from @userinfobot on Telegram
+  report_frequency: "hourly"
+  alert_threshold: 0.75
+  
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/app.log"
+  max_size: "10MB"
+  backup_count: 5
+  
+monitoring:
+  health_check_interval: 300  # 5 minutes
+  metrics_retention_days: 30
+
+prediction_tracking:
+  enabled: true
+  save_predictions: true
+  monitoring_window_hours: 72  # How long to monitor each prediction
+  outcome_check_interval: 3600  # Check outcomes every hour
+  cleanup_days: 30  # Keep predictions for 30 days
+  performance_report_threshold: 5  # Send report after 5+ completed predictions
+  min_confidence_to_track: 0.5  # Only track predictions with 50%+ confidence
