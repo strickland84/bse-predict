@@ -76,9 +76,10 @@ export function PredictionsDetail() {
     }
   }
 
-  const getOutcomeIcon = (outcome: number | null) => {
+  const getOutcomeIcon = (outcome: number | null, prediction: string) => {
     if (outcome === null) return <Clock className="w-4 h-4 text-warning" />
-    return outcome === 1 ? 
+    const isHit = (prediction === 'UP' && outcome === 1) || (prediction === 'DOWN' && outcome === 0)
+    return isHit ? 
       <CheckCircle className="w-4 h-4 text-success" /> : 
       <XCircle className="w-4 h-4 text-error" />
   }
@@ -388,9 +389,11 @@ export function PredictionsDetail() {
                   </td>
                   <td className="p-2">
                     <div className="flex items-center gap-1">
-                      {getOutcomeIcon(pred.actual_outcome)}
+                      {getOutcomeIcon(pred.actual_outcome, pred.prediction)}
                       <span className="text-xs">
-                        {pred.actual_outcome === null ? 'Pending' : pred.actual_outcome === 1 ? 'Hit' : 'Miss'}
+                        {pred.actual_outcome === null ? 'Pending' : 
+                         (pred.prediction === 'UP' && pred.actual_outcome === 1) || 
+                         (pred.prediction === 'DOWN' && pred.actual_outcome === 0) ? 'Hit' : 'Miss'}
                       </span>
                     </div>
                   </td>
