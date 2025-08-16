@@ -407,7 +407,8 @@ async def get_prediction_statistics(
                     po.actual_outcome,
                     p.prediction_class,
                     CASE 
-                        WHEN p.confidence >= 0.8 THEN '80-100%'
+                        WHEN p.confidence >= 0.9 THEN '90-100%'
+                        WHEN p.confidence >= 0.8 THEN '80-90%'
                         WHEN p.confidence >= 0.7 THEN '70-80%'
                         WHEN p.confidence >= 0.6 THEN '60-70%'
                         WHEN p.confidence >= 0.5 THEN '50-60%'
@@ -430,11 +431,12 @@ async def get_prediction_statistics(
             GROUP BY confidence_bucket
             ORDER BY 
                 CASE confidence_bucket
-                    WHEN '80-100%' THEN 1
-                    WHEN '70-80%' THEN 2
-                    WHEN '60-70%' THEN 3
-                    WHEN '50-60%' THEN 4
-                    ELSE 5
+                    WHEN '90-100%' THEN 1
+                    WHEN '80-90%' THEN 2
+                    WHEN '70-80%' THEN 3
+                    WHEN '60-70%' THEN 4
+                    WHEN '50-60%' THEN 5
+                    ELSE 6
                 END
         """
         

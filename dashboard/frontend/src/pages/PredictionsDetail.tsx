@@ -85,7 +85,8 @@ export function PredictionsDetail() {
   }
 
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 80) return 'text-success'
+    if (confidence >= 90) return 'text-success'
+    if (confidence >= 80) return 'text-info'
     if (confidence >= 60) return 'text-warning'
     return 'text-error'
   }
@@ -232,6 +233,8 @@ export function PredictionsDetail() {
                   <div key={cohort.confidence_range} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className={`w-2 h-2 rounded-full ${
+                        cohort.confidence_range === '90-100%' ? 'bg-success' :
+                        cohort.confidence_range === '80-90%' ? 'bg-info' :
                         cohort.accuracy >= 70 ? 'bg-success' : 
                         cohort.accuracy >= 50 ? 'bg-warning' : 'bg-error'
                       }`} />
@@ -239,6 +242,8 @@ export function PredictionsDetail() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className={`text-xs font-bold ${
+                        cohort.confidence_range === '90-100%' ? 'text-success' :
+                        cohort.confidence_range === '80-90%' ? 'text-info' :
                         cohort.accuracy >= 70 ? 'text-success' : 
                         cohort.accuracy >= 50 ? 'text-warning' : 'text-error'
                       }`}>

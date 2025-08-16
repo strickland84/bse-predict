@@ -86,6 +86,8 @@ export const PredictionStats = () => {
                 <div className="flex items-center gap-2">
                   <div className={clsx(
                     'w-2 h-2 rounded-full',
+                    cohort.confidence_range === '90-100%' ? 'bg-success' :
+                    cohort.confidence_range === '80-90%' ? 'bg-info' :
                     cohort.accuracy >= 70 ? 'bg-success' : 
                     cohort.accuracy >= 50 ? 'bg-warning' : 'bg-error'
                   )} />
@@ -96,6 +98,8 @@ export const PredictionStats = () => {
                     <div 
                       className={clsx(
                         'h-full rounded-full transition-all',
+                        cohort.confidence_range === '90-100%' ? 'bg-success' :
+                        cohort.confidence_range === '80-90%' ? 'bg-info' :
                         cohort.accuracy >= 70 ? 'bg-success' : 
                         cohort.accuracy >= 50 ? 'bg-warning' : 'bg-error'
                       )}
@@ -104,6 +108,8 @@ export const PredictionStats = () => {
                   </div>
                   <span className={clsx(
                     'text-xs font-bold w-12 text-right',
+                    cohort.confidence_range === '90-100%' ? 'text-success' :
+                    cohort.confidence_range === '80-90%' ? 'text-info' :
                     cohort.accuracy >= 70 ? 'text-success' : 
                     cohort.accuracy >= 50 ? 'text-warning' : 'text-error'
                   )}>
